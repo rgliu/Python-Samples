@@ -1,9 +1,12 @@
 import spotipy
 import json
+import text_options
 	
 class Spotify_MP3():
 	
 	sp = spotipy.Spotify()
+	text = text_options.Text_Options()
+	search_results = []
 	token = ""
 	
 	# takes in artist name, returns uri and top artist name result
@@ -13,38 +16,49 @@ class Spotify_MP3():
 		artist_name = results["artists"]["items"][0]['name']
 		return artist_uri, artist_name
 		
-	# takes in artist name, returns top 10 tracks of number 1 search
+	# takes in artist name, returns top 10 tracks of number 1 search in string format
 	def search_artist_only(self, artist):
-		search_results = []
+		#search_results = []
 		artist_uri, artist_found = self.get_artist_uri(artist)
 		top_tracks = self.sp.artist_top_tracks(artist_uri, country='US')
-		print("Top Tracks for " + artist_found + ":")
+		#search_results.append(self.text.BOLD + "Top Tracks for " + artist_found + ":" + self.text.END)
 		for track in top_tracks['tracks']:
-			search_results.append(track['name'])
-			print track['name']
+			self.search_results.append("    " + track['name'] + " - " + artist_found)
+		#self.search_results_msg = "\n".join(search_results)
 			
 	def search_music(self, track, artist):
+		#search_result = ""
 		results = self.sp.search(q= track + " " + artist , limit=1)
-		print(results["tracks"]["items"][0]['name'])
-		print(results["tracks"]["items"][0]['artists'][0]['name'])
+		self.search_results.append("    " + results["tracks"]["items"][0]['name'] + " - " + results["tracks"]["items"][0]['artists'][0]['name'])
+		#self.search_results_msg = self.text.BOLD + "Top Result:\n" + self.text.END + search_result		
 			
 	# takes in track name, returns top track name result, artist name, and track uri
 	def search_track_only(self, track):
-		results = self.sp.search(q=track,limit=1, type='track')
-		track_uri = results["tracks"]["items"][0]['uri']
-		track_name = results["tracks"]["items"][0]['name']
-		artist_name = results["tracks"]["items"][0]['artists'][0]['name']
-		return track_name, artist_name, track_uri		
+		#search_results = [self.text.BOLD + "Top Result(s):" + self.text.END]
+		results = self.sp.search(q=track,limit=10, type='track')
+		#track_uri = results["tracks"]["items"][0]['uri']
+		for i in range(10):
+			track_name = results["tracks"]["items"][i]['name']
+			artist_name = results["tracks"]["items"][i]['artists'][0]['name']
+			self.search_results.append("    " + track_name + " - " + artist_name)
+		#self.search_results_msg = "\n".join(search_results)
+		#return track_name, artist_name, track_uri		
+	
+	def play_track(self, track_uri):
+		
 	
 	def search_music_library(self, track, artist):
 		if track == "" and artist == "":
-			print "No Search Entered"
+			print self.text.BOLD + "No Search Entered" +  self.text.END
 		elif track == "":
 			self.search_artist_only(artist)
 		elif artist == "":
 			self.search_track_only(track)
 		else:
 			self.search_music(track, artist)
+			
+	def clear_search_results(self):
+		del self.search_results[:]
 	
 	# takes in autorization token as input
 	# creates spotipy object
