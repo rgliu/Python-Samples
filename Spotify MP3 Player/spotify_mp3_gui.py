@@ -4,10 +4,11 @@ import tkFont
 import ttk
 import curses
 from spotify_mp3 import *
+import webbrowser
 
 class Application(Frame):
 	
-	sp = Spotify_MP3("BQB_jivd-AE4SHvbqhwl3duCygoyMPFSiMWa7dTVAn8URbax_66Hi2eN5teynamTf_OxePny6vW3FQSumdaobCyZot0fsg-pcRJ8kv_Qsxy8gXCboXW2YNhGZQq8bCET1bliAcuKioE45_6lQpspmPEA3c9wuO0")
+	sp = Spotify_MP3("BQAlMfd0t-3fpyJ3FZmtQod8t6aM2a-GZRH7KW7wsPnSQOBTW9ZNzifl_IEV2YuH9wZMliN-_hK2Q-PGs0FeKhe_mXZaa_tyjsOCkKBwPJ0zG-lH2bqBnNSi-xWotFAqNJ8P4o54cKLaniL2TYlskN6EQs27J-o")
 	
 	def create_GUI(self):
 		default_font = tkFont.nametofont("TkDefaultFont")
@@ -106,8 +107,11 @@ class Application(Frame):
 			track_uris.append(result[1])
 			
 	def play_track(self, button_index):
-		global track_uris
-		self.sp.play_track(track_uris[button_index])
+		#global track_uris
+		#self.sp.play_track(track_uris[button_index])
+		#webbrowser.open("index.html").read().format(uri="spotify:track:1BuZAIO8WZpavWVbbq3Lci")
+		print "Play feature not implemented yet"
+		
 
 
 	def __init__(self, master=None):
