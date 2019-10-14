@@ -78,6 +78,7 @@ class Application(Frame):
 		global mainframe
 		global result_label
 		global play_button
+		global track_uris # A separate list of uris is easier to read/implement
 		results_frame.destroy()
 		results_frame = ttk.Frame(mainframe, padding="3 3 12 0")
 		results_frame.grid(column=1, row=0, sticky=(N, W, E, S))
@@ -87,19 +88,26 @@ class Application(Frame):
 		results_header.grid(column=1, row=0, sticky=(N))
 		result_label = []
 		play_button = []
+		track_uris = []
 		
 	
 	def search_and_display_results(self, track, artist):
 		global result_label
 		global play_button
+		global track_uris
 		self.sp.clear_search_results()
 		self.del_results()
 		self.sp.search_music_library(track, artist)
 		for i,result in enumerate(self.sp.search_results):
-			play_button.append(tk.Button(results_frame, text=" "))#, background = "DarkSeaGreen1"))#, command=lambda:self.search_and_display_results(track_search_name.get(), artist_search_name.get()) )
+			play_button.append(tk.Button(results_frame, text=" ", command=lambda:self.play_track(i)))
 			play_button[i].grid(column=0, row=i+1, sticky=(N,W))
-			result_label.append(ttk.Label(results_frame, text=result))
+			result_label.append(ttk.Label(results_frame, text=result[0]))
 			result_label[i].grid(column=1, row=i+1, sticky=(W))
+			track_uris.append(result[1])
+			
+	def play_track(self, button_index):
+		global track_uris
+		self.sp.play_track(track_uris[button_index])
 
 
 	def __init__(self, master=None):

@@ -6,7 +6,7 @@ class Spotify_MP3():
 	
 	sp = spotipy.Spotify()
 	text = text_options.Text_Options()
-	search_results = []
+	search_results = [[],[]]
 	token = ""
 	
 	# takes in artist name, returns uri and top artist name result
@@ -23,13 +23,13 @@ class Spotify_MP3():
 		top_tracks = self.sp.artist_top_tracks(artist_uri, country='US')
 		#search_results.append(self.text.BOLD + "Top Tracks for " + artist_found + ":" + self.text.END)
 		for track in top_tracks['tracks']:
-			self.search_results.append("    " + track['name'] + " - " + artist_found)
+			self.search_results.append(["    " + track['name'] + " - " + artist_found, track['uri']] )
 		#self.search_results_msg = "\n".join(search_results)
 			
 	def search_music(self, track, artist):
 		#search_result = ""
 		results = self.sp.search(q= track + " " + artist , limit=1)
-		self.search_results.append("    " + results["tracks"]["items"][0]['name'] + " - " + results["tracks"]["items"][0]['artists'][0]['name'])
+		self.search_results.append(["    " + results["tracks"]["items"][0]['name'] + " - " + results["tracks"]["items"][0]['artists'][0]['name'], results["tracks"]["items"][0]['uri'] ])
 		#self.search_results_msg = self.text.BOLD + "Top Result:\n" + self.text.END + search_result		
 			
 	# takes in track name, returns top track name result, artist name, and track uri
@@ -40,12 +40,13 @@ class Spotify_MP3():
 		for i in range(10):
 			track_name = results["tracks"]["items"][i]['name']
 			artist_name = results["tracks"]["items"][i]['artists'][0]['name']
-			self.search_results.append("    " + track_name + " - " + artist_name)
+			track_uri = results["tracks"]["items"][i]['uri']
+			self.search_results.append(["    " + track_name + " - " + artist_name,track_uri])
 		#self.search_results_msg = "\n".join(search_results)
 		#return track_name, artist_name, track_uri		
 	
 	def play_track(self, track_uri):
-		
+		self.sp.start_playback(context_uri=track_uri)
 	
 	def search_music_library(self, track, artist):
 		if track == "" and artist == "":
