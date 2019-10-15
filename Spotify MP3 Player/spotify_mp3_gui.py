@@ -2,9 +2,8 @@ from Tkinter import *
 import Tkinter as tk
 import tkFont
 import ttk
-import curses
 from spotify_mp3 import *
-import webbrowser
+#import webbrowser
 
 class Application(Frame):
 	
